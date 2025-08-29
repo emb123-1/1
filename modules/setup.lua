@@ -200,7 +200,7 @@ local cache = {
 
 local links = { 
     changelog = "https://raw.githubusercontent.com/emb123-1/1/refs/heads/main/changelog.json",
-    modules = "https://raw.githubusercontent.com/Project-Evolution/Archive/main/V3/modules/",
+    modules = "https://raw.githubusercontent.com/emb123-1/1/tree/main/modules/", --https://github.com/emb123-1/1/tree/main/modules https://raw.githubusercontent.com/Project-Evolution/Archive/main/V3/modules/
     images = "https://raw.githubusercontent.com/Project-Evolution/Archive/main/V3/images/",
     systems = "https://raw.githubusercontent.com/Project-Evolution/Archive/main/V3/modules/systems/"
 }
@@ -215,20 +215,20 @@ getgenv().evov3 = {
 		end,
 		fetchimage = function(self, imagename)
 			if cache.images[imagename] == nil then
-				cache.images[imagename] = getcustomasset("Evo V3/Data/Images/" .. imagename)
+				cache.images[imagename] = getcustomasset("Low/Data/Images/" .. imagename)
 			end
 			return cache.images[imagename]
 		end,
 		fetchsystem = function(self, systemname, ...)
 			if cache.systems[systemname] == nil then
-				cache.systems[systemname] = loadstring(readfile(string.format("Evo V3/Data/Systems/%s.lua", systemname)))()
+				cache.systems[systemname] = loadstring(readfile(string.format("Low/Data/Systems/%s.lua", systemname)))()
 			end
 			return cache.systems[systemname].new(...)
 		end
 	},
 }
 
-evov3.startup = isfile and isfile("Evo V3/Data/Systems/signal.lua") and evov3.imports:fetchsystem("signal") or loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Project-Evolution/Archive/main/V3/modules/systems/signal.lua", true))().new()
+evov3.startup = isfile and isfile("Low/Data/Systems/signal.lua") and evov3.imports:fetchsystem("signal") or loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Project-Evolution/Archive/main/V3/modules/systems/signal.lua", true))().new()
 
 local function checkdirectories(changelog)
 	for i = 1, #changelog.directories do
@@ -243,7 +243,7 @@ end
 
 local function checkimages(changelog)
 	for i = 1, #changelog.images do
-		local path = "Evo V3/Data/Images/" .. changelog.images[i]
+		local path = "Low/Data/Images/" .. changelog.images[i]
 		if not isfile(path) then
 			writefile(path, game:HttpGetAsync(links.images .. changelog.images[i], true))
 		end
@@ -253,7 +253,7 @@ local function checkimages(changelog)
 end
 
 local function checksystems(changelog)
-	local path = "Evo V3/Data/changelog.json"
+	local path = "Low/Data/changelog.json"
 	local systems, count, checked = {}, 0, 0
 	for i, v in next, changelog.systems do
 		count = count + 1
@@ -267,7 +267,7 @@ local function checksystems(changelog)
 		end
 	end
 	for i, v in next, changelog.systems do
-		local path = string.format("Evo V3/Data/Systems/%s.lua", i)
+		local path = string.format("Low/Data/Systems/%s.lua", i)
 		if forceupdate or isfile(path) == false or systems[i] ~= true then
 			writefile(path, game:HttpGetAsync(links.systems .. i .. ".lua", true))
 		end
